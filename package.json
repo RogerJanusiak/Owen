@@ -4,6 +4,9 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "test": "node --test test/server.test.js"
+    "test": "node --test test/server.test.js test/app.test.js test/api.test.js test/backup.test.js"
+  },
+  "dependencies": {
+    "mysql2": "^3.11.0"
   }
 }

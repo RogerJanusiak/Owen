@@ -4,6 +4,15 @@ set -e
 PID_FILE=".server.pid"
 PORT=3000
 
+# Start MySQL container and wait for it to be ready
+echo "Starting MySQL..."
+docker compose up -d
+until docker compose exec -T mysql mysqladmin ping -h localhost --silent 2>/dev/null; do
+  sleep 1
+done
+echo "MySQL ready."
+
+# Start the Node server (skip if already running)
 if [ -f "$PID_FILE" ]; then
   PID=$(cat "$PID_FILE")
   if kill -0 "$PID" 2>/dev/null; then

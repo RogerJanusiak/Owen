@@ -2,17 +2,20 @@
 
 PID_FILE=".server.pid"
 
-if [ ! -f "$PID_FILE" ]; then
-  echo "No server pid file found."
-  exit 0
-fi
-
-PID=$(cat "$PID_FILE")
-if kill -0 "$PID" 2>/dev/null; then
-  kill "$PID"
-  echo "Server (pid $PID) stopped."
+# Stop the Node server
+if [ -f "$PID_FILE" ]; then
+  PID=$(cat "$PID_FILE")
+  if kill -0 "$PID" 2>/dev/null; then
+    kill "$PID"
+    echo "Server (pid $PID) stopped."
+  else
+    echo "No process found for pid $PID."
+  fi
+  rm "$PID_FILE"
 else
-  echo "No process found for pid $PID."
+  echo "No server pid file found."
 fi
 
-rm "$PID_FILE"
+# Stop the MySQL container
+docker compose down
+echo "MySQL stopped."
