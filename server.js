@@ -94,9 +94,24 @@ export function createServer(db = null, backup = null) {
           return;
         }
 
-        // GET /api/tasks
+        // GET /api/columns — sorted by display_order ascending
+        if (method === 'GET' && url.pathname === '/api/columns') {
+          const columns = await db.query(
+            'SELECT * FROM board_columns ORDER BY display_order',
+          );
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify(columns));
+          return;
+        }
+
+        // GET /api/tasks — joined with columns to include column name
         if (method === 'GET' && url.pathname === '/api/tasks') {
-          const tasks = await db.query('SELECT * FROM tasks ORDER BY created_at DESC');
+          const tasks = await db.query(
+            `SELECT t.id, t.title, t.column_id, t.created_at, c.name AS column_name
+             FROM tasks t
+             LEFT JOIN board_columns c ON c.id = t.column_id
+             ORDER BY t.created_at DESC`,
+          );
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify(tasks));
           return;
@@ -105,7 +120,7 @@ export function createServer(db = null, backup = null) {
         // POST /api/tasks
         if (method === 'POST' && url.pathname === '/api/tasks') {
           const body = JSON.parse(await readBody(req));
-          const { title, column_name = 'backlog', label = null } = body;
+          const { title, column_id = 1 } = body;
 
           if (!title) {
             res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -114,8 +129,8 @@ export function createServer(db = null, backup = null) {
           }
 
           const result = await db.query(
-            'INSERT INTO tasks (title, column_name, label) VALUES (?, ?, ?)',
-            [title, column_name, label],
+            'INSERT INTO tasks (title, column_id) VALUES (?, ?)',
+            [title, column_id],
           );
           res.writeHead(201, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ id: result.insertId }));
@@ -129,10 +144,10 @@ export function createServer(db = null, backup = null) {
 
           if (method === 'PATCH') {
             const body = JSON.parse(await readBody(req));
-            const { title, column_name, label } = body;
+            const { title, column_id } = body;
             await db.query(
-              'UPDATE tasks SET title = ?, column_name = ?, label = ? WHERE id = ?',
-              [title, column_name, label, id],
+              'UPDATE tasks SET title = ?, column_id = ? WHERE id = ?',
+              [title, column_id, id],
             );
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ ok: true }));
@@ -184,8 +199,8 @@ export function createServer(db = null, backup = null) {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const { createDb }    = await import('./db.js');
-  const { runBackup }   = await import('./backup.js');
+  const { createDb }  = await import('./db.js');
+  const { runBackup } = await import('./backup.js');
   const db = createDb();
   const server = createServer(db, runBackup);
 
