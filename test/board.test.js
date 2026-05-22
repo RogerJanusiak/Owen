@@ -76,6 +76,13 @@ test('renderColumns escapes HTML in column names', () => {
   assert.match(root.boardHtml, /&lt;script&gt;/);
 });
 
+test('renderColumns includes an add-task button with the correct data-column-id', () => {
+  const root = makeBoardRoot();
+  renderColumns([{ id: 7, name: 'Sprint', display_order: 0 }], root);
+  assert.match(root.boardHtml, /class="add-task-btn"/);
+  assert.match(root.boardHtml, /data-column-id="7"/);
+});
+
 // ── renderTasks ───────────────────────────────────────────────────────────────
 
 function makeColumn(columnId) {

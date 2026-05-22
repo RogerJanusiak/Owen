@@ -107,6 +107,34 @@ header {
   flex: 1;
 }
 
+.column-footer {
+  padding: 0 10px 10px;
+}
+
+.add-task-btn {
+  display: none;
+  width: 100%;
+  padding: 6px 10px;
+  background: transparent;
+  color: var(--muted);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.column:hover .add-task-btn {
+  display: block;
+}
+
+.add-task-btn:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
 /* ── Card ───────────────────────────────────────────── */
 
 .card {
@@ -135,6 +163,90 @@ header {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
+}
+
+/* ── Modal ──────────────────────────────────────────── */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-overlay.hidden {
+  display: none;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.modal-input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  padding: 8px 10px;
+  width: 100%;
+  outline: none;
+}
+
+.modal-input:focus {
+  border-color: var(--accent);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.btn-cancel,
+.btn-create {
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  padding: 6px 14px;
+}
+
+.btn-cancel {
+  background: transparent;
+  color: var(--muted);
+}
+
+.btn-cancel:hover {
+  color: var(--text);
+}
+
+.btn-create {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-create:hover {
+  opacity: 0.9;
 }
 
 /* ── Label chip ─────────────────────────────────────── */

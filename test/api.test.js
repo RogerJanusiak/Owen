@@ -151,6 +151,19 @@ test('DELETE /api/tasks/:id removes a task', async () => {
   });
 });
 
+test('POST /api/tasks defaults column_id to 1 when not provided', async () => {
+  await withServer(createMockDb(), async (url) => {
+    const res = await fetch(`${url}/api/tasks`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: 'No column specified' }),
+    });
+    assert.equal(res.status, 201);
+    const tasks = await (await fetch(`${url}/api/tasks`)).json();
+    assert.equal(tasks[0].column_id, 1);
+  });
+});
+
 test('POST /api/tasks returns 400 when title is missing', async () => {
   await withServer(createMockDb(), async (url) => {
     const res = await fetch(`${url}/api/tasks`, {

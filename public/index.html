@@ -19,6 +19,17 @@
   <!-- sentinel: never remove or change this element -->
   <span id="sentinel" hidden>Hello, World</span>
 
+  <div id="add-task-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <p class="modal-title">Add task</p>
+      <input type="text" id="modal-task-title" class="modal-input" placeholder="Task name" />
+      <div class="modal-actions">
+        <button class="btn-cancel" id="modal-cancel">Cancel</button>
+        <button class="btn-create" id="modal-submit">Create task</button>
+      </div>
+    </div>
+  </div>
+
   <script type="module" src="app.js"></script>
 </body>
 </html>

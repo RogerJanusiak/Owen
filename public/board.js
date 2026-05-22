@@ -15,6 +15,9 @@ export function renderColumns(columns, root = document) {
         <span class="column-count">0</span>
       </div>
       <div class="column-body"></div>
+      <div class="column-footer">
+        <button class="add-task-btn" data-column-id="${column.id}">+ Add task</button>
+      </div>
     </section>
   `).join('');
 }
